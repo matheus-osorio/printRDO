@@ -1,0 +1,127 @@
+{
+    "contrato": {
+        "contratante": "1",
+        "nome": "OS OFICINA MACAE ii",
+        "objetivo": "SERVIÇOS DE APOIO ÀS OFICINAS DO SCA, SP E MOVIMENTAÇÃO DE MATERIAIS NA ÁREA DE TRIAGEM",
+        "inicio":"21/08/2018 00:00:00",
+        "fim":"20/08/2022 00:00:00",
+        "total":42231441.20000001
+    },
+    "ppuStatus": [
+        {
+            "funcao": "Trabalho Hipotético #1",
+            "padrao": {
+                "status": [
+                    "D",
+                    "E",
+                    "F",
+                    "F",
+                    "E",
+                    "D"
+                ],
+                "valor": {
+                    "D": 40.00,
+                    "E": 80.00,
+                    "F": 52.80
+                }
+            },
+            "horaExtra": {
+                "status": [
+                    "HA",
+                    "HE",
+                    "HE",
+                    "HI",
+                    "HO",
+                    "HO",
+                    "HO"
+                ],
+                "horas":[
+                    0,
+                    2,
+                    3,
+                    3,
+                    5,
+                    2,
+                    2
+                ],
+                "valor": {
+                    "HA": {
+                        "base": 50.00,
+                        "extra": 15.30
+                    },
+                    "HE": {
+                        "base": 200.00,
+                        "extra": 40.50
+                    },
+                    "HI": {
+                        "base": 10.00,
+                        "extra": 5.50
+                    },
+                    "HO": {
+                        "base": 200.00,
+                        "extra": 30.00
+                    }
+                }
+            }
+        },
+        {
+            "funcao": "Trabalho Hipotético #2",
+            "padrao": {
+                "status": [
+                    "D",
+                    "E",
+                    "F",
+                    "F",
+                    "E",
+                    "D",
+                    "F",
+                    "F",
+                    "E"
+                ],
+                
+                "valor": {
+                    "D": 400.00,
+                    "E": 200.00,
+                    "F": 30.80
+                }
+            },
+            "horaExtra": {
+                "status": [
+                    "HA",
+                    "HE",
+                    "HE",
+                    "HI",
+                    "HO",
+                    "HO"
+                ],
+                "horas":[
+                    1,
+                    2,
+                    3,
+                    0,
+                    5,
+                    0
+                ],
+                "valor": {
+                    "HA": {
+                        "base": 510.00,
+                        "extra": 15.30
+                    },
+                    "HE": {
+                        "base": 20.00,
+                        "extra": 401.50
+                    },
+                    "HI": {
+                        "base": 230.00,
+                        "extra": 5.50
+                    },
+                    "HO": {
+                        "base": 200.00,
+                        "extra": 30.00
+                    }
+                }
+            }
+        }
+        
+    ]
+}
