@@ -1,58 +1,101 @@
 <template>
   <div id="app">
-    <div id="linha1">
-     <div id="logo">
-        <img src="./assets/logo.png" alt="logo perbras" />
-     </div>
-      <div id="titulo">STATUS x PPU</div>
-      <div id="contrato">CONTRATO: {{ contrato.nome }}</div>
-      <div id="estab">ESTABELECIMENTO: {{ contrato.nome }}</div>
+    <div class="table-wrapper">
+      <table v-if="atual == 'status'" id="status">
+      <thead>
+        <th :colspan="tabela[0][0].status.length + 1">Status dos Funcionários</th>
+      </thead>
+       <tbody v-for="funcao in tabela" :key="funcao.id">
+         <tr>
+           <th class="profissao" :colspan="tamanho + 1">{{funcao[0].job}}</th>
+         </tr>
+         <tr>
+           <th class="nome">Nome</th>
+           <th class="status" v-for="numero in tamanho" :key="numero.id">
+             {{numero}}
+           </th>
+         </tr>
+         <tr v-for="funcionario in funcao" :key="funcionario.id">
+           <td>{{funcionario.nome}}</td>
+           <td v-for="status in funcionario.status" :style="pegaCor(status)" :key="status.id">
+             {{status}}
+           </td>
+         </tr>
+         <tr><br></tr>
+       </tbody>
+    </table>
+    <table v-if="atual == 'hora extra'" id="hora-extra">
+      <thead>
+        <th :colspan="tabela[0][0].status.length + 1">Hora Extra dos Funcionários</th>
+      </thead>
+       <tbody v-for="funcao in tabela" :key="funcao.id">
+         <tr>
+           <th class="profissao" :colspan="tamanho + 1">{{funcao[0].job}}</th>
+         </tr>
+         <tr>
+           <th class="nome">Nome</th>
+           <th class="status" v-for="numero in tamanho" :key="numero.id">
+             <span v-if="numero < 10" class="invisivel">0</span>
+             {{numero}}
+           </th>
+         </tr>
+         <tr v-for="funcionario in funcao" :key="funcionario.id">
+           <td>{{funcionario.nome}}</td>
+           <td class="hora" v-for="extra in funcionario.extra" :key="extra.id">
+             {{extra}}
+           </td>
+         </tr>
+         <tr><br></tr>
+       </tbody>
+    </table>
+    <table v-if="atual == 'valores'" id="valores">
+      <!-- <thead>
+        <th :colspan="tamanho + 1">Status x PPU</th>
+      </thead> -->
+
+       <tbody v-for="funcao in tabela" :key="funcao.id">
+         <tr>
+           <th class="profissao" :colspan="tamanho + 1">{{funcao[0].job}}</th>
+         </tr>
+         <tr>
+           <th class="nome">Nome</th>
+           <th class="status" v-for="numero in tamanho" :key="numero.id">
+             {{numero}}
+           </th>
+         </tr>
+         <tr v-for="funcionario in funcao" :key="funcionario.id">
+           <td>{{funcionario.nome}}</td>
+           <td v-money class="hora" v-for="(extra,index) in funcionario.extra" :key="extra.id">
+             {{calcularValor(extra,index,funcionario)}}
+           </td>
+         </tr>
+         <tr> 
+           <td>TOTAL</td>
+           <td v-money v-for="valor in criaTotal(funcao)" :key="valor.id">{{valor}}</td>
+         </tr>
+         <tr><br></tr>
+       </tbody>
+       <tbody>
+         <tr>
+           <td><br></td>
+           <th class="status" v-for="numero in tabela[0][0].status.length" :key="numero.id">
+             {{numero}}
+           </th>
+         </tr>
+         <tr>
+           <td>TOTAL</td>
+           <td v-money v-for="valor in somaTodos()" :key="valor.id">{{valor}}</td>
+         </tr>
+         <tr><br></tr>
+       </tbody>
+    </table>
     </div>
-    <div id="tabela">
-      <table  v-for="funcao in tabela" :key="funcao.id">
-        <thead>
-          <th colspan="4" class="head header-1">{{funcao.funcao}}</th>
-        </thead>
-        <thead>
-          <th class="head header-2">STATUS</th>
-          <th class="head header-2">Quantidade</th>
-          <th class="head header-2">Unitário</th>
-          <th class="head header-2">TOTAL</th>
-        </thead>
-        <tbody>
-          <tr v-for="status in funcao.padrao" :key="status.id">
-            <td class="square header-3">{{status.status}}</td>
-            <td class="square header-4">{{status.quantidade}}</td>
-            <td class="square header-4" v-money>{{status.unitario}}</td>
-            <td class="square header-5" v-money>{{status.total}}</td>
-          </tr>
-        </tbody>
-        <thead>
-          <th colspan="4" class="head"><br></th>
-        </thead>
-        <tbody>
-          <tr v-for="status in funcao.especial" :key="status.id">
-            <td class="square header-3">{{status.status}}</td>
-            <td class="square header-4">{{status.base}}(+{{status.extra}}hrs)</td>
-            <td class="square header-4"><span v-money>{{status.unitario.base}}</span>(+<span v-money>{{status.unitario.extra}}</span> p/hora)</td>
-            <td class="square header-4" v-money>{{status.total}}</td>
-          </tr>
-          <tr>
-            <th class="head header-2" colspan="2">TOTAL</th>
-            <td class="square header-5" v-money colspan="2">{{funcao.total}}</td>
-          </tr>
-        </tbody>
-      </table>
-      <table>
-        <tbody>
-          <tr><br></tr>
-          <tr><br></tr>
-          <tr>
-            <td class="total-header header-2" colspan="3">TOTAL</td>
-            <td class="total-value header-5" v-money>{{total}}</td>
-          </tr>
-        </tbody>
-      </table>
+    <div id="menu-botoes">
+      <div>
+        <button type="button" class="btn btn-secondary" @click="atual='status'">Status</button>
+      <button type="button" class="btn btn-secondary" @click="atual='hora extra'">Hora Extra</button>
+      <button id="botaoInicial" type="button" class="btn btn-secondary" @click="atual='valores'">Valores</button>
+      </div>
     </div>
   </div>
 </template>
@@ -64,95 +107,80 @@ export default {
   name: "App",
   data() {
     return {
-      tabela: {},
-      total: {},
-      contrato: {},
-    };
+      tabela: [],
+      cores: {},
+      he: {},
+      atual: 'valores',
+      tamanho: 0
+    }
   },
   methods: {
-    somaTotal(obj) {
-      return obj.reduce((soma, valor) => {
-        return soma + valor.total;
-      }, 0);
-    },
-
-    contaStatus(status) {
-      return status.reduce((obj, atual) => {
-        if (obj[atual] != undefined) {
-          obj[atual]++;
-        } else {
-          obj[atual] = 1;
-        }
-        return obj;
-      }, {});
-    },
-
-    contaHoras(status, horas) {
-      return status.reduce((obj, atual, index) => {
-        if (obj[atual] != undefined) {
-          obj[atual] += horas[index];
-        } else {
-          obj[atual] = horas[index];
-        }
-        return obj;
-      }, {});
-    },
-    montaEspecial(especial) {
-      const contagem = this.contaStatus(especial.status);
-      const horas = this.contaHoras(especial.status, especial.horas);
-      // console.log('contagem:',contagem)
-      // console.log('horas:',horas)
-      // console.log('especial:',especial)
-      return Object.keys(contagem).map((chave) => {
-        console.log('obj:',especial[chave],'chave:',chave)
+    pegaCor(status){
+      if(this.cores[status] != undefined){
         return {
-          status: chave,
-          unitario: especial.valor[chave],
-          base: contagem[chave],
-          extra: horas[chave],
-          total:
-            contagem[chave] * especial.valor[chave].base +
-            horas[chave] * especial.valor[chave].extra,
-        };
-      }, []);
+        "background-color": this.cores[status].color
+        }
+      }
+      return {}
+      
     },
-    montaPadrao(padrao) {
-      const contagem = this.contaStatus(padrao.status);
-      // console.log('contagem:', contagem)
-      return Object.keys(contagem).map((chave) => {
-        const unitario =
-          padrao.valor[chave] == undefined ? 0 : padrao.valor[chave];
-        return {
-          status: chave,
-          unitario,
-          quantidade: contagem[chave],
-          total: contagem[chave] * unitario,
-        };
-      });
+    calcularValor(extra,index,funcionario){
+      const status = funcionario.status[index]
+      const funcao = funcionario.job
+      if(this.he[funcao][status] != undefined){
+        return (parseFloat(extra * this.he[funcao][status].extra) + parseFloat(this.he[funcao][status].fixo)).toFixed(2)
+      }
+      return 0
     },
+    criaTotal(funcao){
+      const total = funcao[0].status.map(() => 0)
+      for(let funcionario of funcao){
+        for(let index in total){
+          total[index] += (this.calcularValor(funcionario.extra[index],index,funcionario)*1)
+        }
+      }
+      return total
+    },
+    somaTodos(){
+      const funcoes = Object.keys(this.tabela)
+      const inicio = this.tabela[funcoes[0]][0].status.map(() => 0)
+      return funcoes.reduce((soma,funcao) => {
+        const total = this.criaTotal(this.tabela[funcao])
+        soma = soma.map((atual, index) => {
+          return atual + total[index]*1
+        })
+        
+        return soma
+      },inicio)
+    }
   },
   async mounted() {
-    this.contrato = await fetch(
-      "http://localhost:3003/contrato"
-    ).then((response) => response.json());
-    const status = await fetch(
-      "http://localhost:3003/ppuStatus"
-    ).then((response) => response.json());
-    const tabela = status.map((funcao) => {
-      const padrao = this.montaPadrao(funcao.padrao);
-      // console.log('padrao:',padrao)
-      const especial = this.montaEspecial(funcao.horaExtra);
-      // console.log('especial:',especial)
-      return {
-        funcao: funcao.funcao,
-        padrao: padrao,
-        especial: especial,
-        total: this.somaTotal(padrao) + this.somaTotal(especial),
-      };
-    });
-    const total = tabela.reduce((soma, obj) => soma + obj.total,0);
-    this.tabela = tabela;
-    this.total = total;
+    const escala = await fetch(this.$store.getters.link('escala',this.$route.params)).then(response => response.json())
+    const cores = await fetch(this.$store.getters.link('cor',this.$route.params)).then(response => response.json())
+    .then(cores => {
+      return cores.reduce((obj,cor) => {
+        obj[cor.name] = cor
+        return obj
+      },{})
+    })
+    const he = await fetch(this.$store.getters.link('hora',this.$route.params)).then(response => response.json())
+    const objFuncoes = escala.reduce((obj,funcionario) => {
+      if(obj[funcionario.job] == undefined){
+        obj[funcionario.job] = []
+      }
+      obj[funcionario.job].push({
+        job: funcionario.job,
+        nome: funcionario.user,
+        status: funcionario.status,
+        extra: funcionario.extra
+      })
+      return obj
+    },{})
+    this.cores = cores
+    this.he = he
+    this.tabela = Object.values(objFuncoes)
+    this.tamanho = this.tabela[0][0].status.length
+    
   }
 };
 
@@ -166,112 +194,107 @@ Vue.directive("money", {
       valor += "0";
     }
 
-    valor = valor.replace(/(\d)(?=(\d{3})+,)/, "$1.");
+    valor = valor.replace(/(\d)(?=(\d{3})+,)/g, "$1.");
     el.innerHTML = valor;
   },
 });
 </script>
 
 <style>
+
+
+
 #app {
   display: grid;
-  height: 100%;
-  margin:5px;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
   grid-template-rows: auto 1fr;
 }
 
-#linha1{
-  height: 100%;
-  display: grid;
-  grid-template-rows:70% 30%;
-  grid-template-columns: 10% 45% 45%;
-  grid-template-areas: 
-  "img titulo titulo"
-  "img contrato estab"
+#valores{
+  font-size: 0.75rem;
 }
 
-#linha1 > #logo{
-  grid-area: img;
-  border-style:solid;
-  border-right: 0px;
+#status{
+  font-size: 0.9rem;
+}
+
+#hora-extra{
+  font-size: 0.9rem;
+  width: 100%;
+}
+
+
+td,th{
+  border-style: solid;
+  overflow: hidden;
+  font-size: inherit;
+}
+
+.profissao{
+  background-color: rgb(66, 196, 152);
+}
+
+.nome{
+  background-color:  rgb(187, 187, 187);
+}
+
+
+#hora-extra > tbody > tr > th{
+  width:10px !important;
+  white-space: nowrap;
+}
+
+#menu-botoes{
+  position: fixed;
+  width: 100%;
+
+  bottom: 0;
+  margin-bottom: 5px;
+  right: 0;
   display: flex;
-  align-items: center;
   justify-content: center;
 }
 
-#linha1 > #titulo{
-  grid-area: titulo;
-  font-size: 2rem;
-  border-style: solid;
-  text-align: center;
+
+#menu-botoes > button{
+  margin-right:5px
 }
 
-#linha1 > #contrato{
-  grid-area: contrato;
-  border-style:solid;
-  border-top-width: 0px;
-  border-right: 0px;
-  text-align: center;
+.table-wrapper{
+  width: 100vw;
+  overflow: auto;
+  margin-bottom: 20px;
+  padding:10px;
 }
 
-#linha1 > #estab{
-  grid-area: estab;
-  border-style:solid;
-  border-top-width: 0px;
-  text-align: center;
+.invisivel{
+  color: white;
 }
 
-/*************************************************************/
+.hora{
+  background-color: rgb(160, 160, 160);
+} 
 
-#tabela{
-  height: 100%;
-  width: 100%;
-
-  border-style:solid;
-  border-top: 0px;
-}
-
-#tabela > table{
-  width: 100%;
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
 }
 
-.head{
-  border-right: solid;
-  border-bottom: solid;
+/* Track */
+::-webkit-scrollbar-track {
+  background: #f1f1f1; 
+}
+ 
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #888; 
+  border-radius: 50px;
 }
 
-.header-1{
-  background-color:#e86a61;
-}
-
-.header-2{
-  background-color:#edbd6f;
-}
-
-.header-3{
-  background-color:#9fccb3;
-}
-
-.header-4{
-  background-color:#c5c5c5;
-}
-
-.header-5{
-  background-color:#a9d6d6;
-}
-.header-6{
-  background-color:#09f8f4;
-}
-.square{
-  border-right: solid;
-  border-bottom: solid;
-}
-
-.total-header{
-  border-top: solid;
-  border-right: solid;
-}
-.total-value{
-  border-top: solid;
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555; 
 }
 </style>
