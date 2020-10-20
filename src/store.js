@@ -18,7 +18,6 @@ export default new Vuex.Store({
       },
       getters: {
         link: (state) => (id, params) => {
-          console.log('params:',params)
           let link = state.urls[id]
           for(let key of Object.keys(params)){
               link = link.replace('{{' + key + '}}',params[key])
