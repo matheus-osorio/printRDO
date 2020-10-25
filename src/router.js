@@ -6,17 +6,17 @@ import valor from './views/valor'
 
 const routes = [
     {
-        path: '/status/:mes/:ano/:estab',
+        path: '/status/:periodo/:estab',
         component: status,
         name: 'status',
     },
     {
-        path: '/extra/:mes/:ano/:estab',
+        path: '/extra/:periodo/:estab',
         component: hora,
         name: 'extra',
     },
     {
-        path: '/valor/:mes/:ano/:estab',
+        path: '/valor/:periodo/:estab',
         component: valor,
         name: 'valor',
     }

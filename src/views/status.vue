@@ -10,7 +10,7 @@
             <tr>
             <th class="funcao" :colspan="tamanho + 1" >{{funcao}} - {{setor[funcao][0].setor}}</th>
             </tr> 
-           <nomseq :tamanho="tamanho"/>
+           <nomseq :tamanho="tamanho" :periodo="periodo"/>
             <tr  v-for="funcionario in setor[funcao]" :key="funcionario.id">
                 <td class="nome">{{funcionario.nome}}</td>
                 <td v-for="status in funcionario.status" :key="status.id" :style="defineCor(status)">{{status}}</td>
@@ -26,7 +26,7 @@ import Vue from 'vue'
 import nomseq from '../components/nomeESequencia'
 
 export default {
-    props:['tabela','tamanho','cores','setores'],
+    props:['tabela','tamanho','cores','setores','periodo'],
     components:{
         nomseq
     },

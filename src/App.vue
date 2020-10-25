@@ -66,13 +66,12 @@
       </div>
     </div>
     <div>
-      <router-view :tabela="tabela" :tamanho="tamanho" :cores="cores" :setores="strFiltr" :he="he"/>
+      <router-view :periodo="periodo" :tabela="tabela" :tamanho="tamanho" :cores="cores" :setores="strFiltr" :he="he"/>
     </div>
   </div>
 </template>
 
 <script>
-
 export default {
   name: "App",
   data() {
@@ -91,6 +90,7 @@ export default {
       strFiltr: [],
       funcoes: [],
       chave:0,
+      periodo: [],
       calculado:false
     };
   },
@@ -102,7 +102,6 @@ export default {
       if(this.ativos.setor >= 0){
         func = func.filter((f) => f.setor == this.setores[this.ativos.setor])
       }
-
        if(this.ativos.funcao >= 0){
         func = func.filter((f) => f.job == this.funcoes[this.ativos.funcao])
       }
@@ -169,13 +168,12 @@ export default {
         soma = soma.map((atual, index) => {
           return atual + total[index] * 1;
         });
-
         return soma;
       }, inicio);
     },
   },
   async mounted() {
-    console.log('rotas: ',this.$route)
+    const periodo = await fetch(this.$store.getters.link('periodo',this.$route.params)).then(response => response.json())
     const escala = await fetch(
       this.$store.getters.link("escala", this.$route.params)
     ).then((response) => response.json())
@@ -195,16 +193,13 @@ export default {
           return obj;
         }, {});
       });
-
     let setores = escala.map((func) => func.setor);
     let funcoes = escala.map((func) => func.job);
-
     setores = Array.from(new Set(setores));
     funcoes = Array.from(new Set(funcoes));
     const he = await fetch(
       this.$store.getters.link("hora", this.$route.params)
     ).then((response) => response.json());
-
     const objFuncoes = this.criaObjEscala(escala)
     this.cores = cores;
     this.he = he;
@@ -213,12 +208,12 @@ export default {
     this.total = escala;
     this.setores = setores;
     this.funcoes = funcoes;
-    this.strFiltr = setores
-    this.calculado = true
+    this.strFiltr = setores;
+    this.calculado = true;
+    this.periodo = periodo;
     console.log('acabou')
   },
 };
-
 </script>
 
 <style>
@@ -233,7 +228,6 @@ export default {
   border-color: #eeeeee;
   color: #eeeeee;
 }
-
 .dropdown-content {
   display: none;
   position: absolute;
@@ -244,22 +238,18 @@ export default {
   max-height: 300px;
   z-index: 20;
 }
-
 .dropdown-content:active {
   display: none;
 }
 .dropdown-wrapper:hover > .dropdown-content {
   display: block;
 }
-
 .dropdown:hover ~ .dropdown-content {
   display: block;
 }
-
 .ativo {
   background-color: rgb(160, 160, 160) !important;
 }
-
 .dropdown-items {
   width: 100%;
   display: flex;
@@ -270,23 +260,19 @@ export default {
   text-align: center;
   height: 50px;
 }
-
 .dropdown-items:hover {
   background-color: rgba(187, 187, 187, 0.986);
 }
-
 .vertical-line{
   border-left: solid;
   border-width: 3px;
   border-color: #eeeeee;
 }
-
 .tabela-seletor{
   display: flex;
   column-gap: 10px;
   padding-left: 10px;
 }
-
 .area{
   display: flex;
   height: 100%;
@@ -299,17 +285,14 @@ export default {
   color: #006064;
   text-decoration: none;
 }
-
 .area:hover{
   text-decoration: none;
   color: #006064;
 }
-
 .current{
   border-color:#e0f7fa;
   color:#e0f7fa !important;
 }
-
 #app {
   display: grid;
   height: 100vh;
@@ -317,7 +300,6 @@ export default {
   overflow: scroll;
   grid-template-rows: auto 1fr;
 }
-
 #menu {
   position: absolute;
   transition: 0.3s;
@@ -339,7 +321,6 @@ export default {
     rgba(129, 227, 182, 1) 47%
   );
 }
-
 #slide-activator {
   position: absolute;
   top: 10px;
@@ -351,35 +332,27 @@ export default {
   left: 48%;
   z-index: 10;
 }
-
 #slide-activator:hover ~ #menu {
   transition: 0.5s;
   top: 0;
 }
-
 #menu:hover {
   transition: 1s;
   top: 0;
 }
-
-
-
 ::-webkit-scrollbar {
   width: 5px;
 }
-
 /* Track */
 ::-webkit-scrollbar-track {
   box-shadow: inset 0 0 5px grey;
   border-radius: 10px;
 }
-
 /* Handle */
 ::-webkit-scrollbar-thumb {
   background: darkgrey;
   border-radius: 1000px;
 }
-
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
   background: grey;
