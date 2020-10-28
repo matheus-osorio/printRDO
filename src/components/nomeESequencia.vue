@@ -1,6 +1,6 @@
 <template>
   <tr :key="chave">
-    <th class="nome-data">Nome</th>
+    <th class="nome-data">{{colocar}}</th>
     <th class="nome-data" id="data" v-for="numero in criaMes" :key="numero.id">{{ numero }}</th>
   </tr>
 </template>
@@ -10,7 +10,8 @@ export default {
     data(){
       return {
         mes: [],
-        chave: 0
+        chave: 0,
+        colocar: ''
       }
     },
     computed:{
@@ -32,7 +33,13 @@ export default {
           return mes
       }
     },
-    props:['tamanho','periodo'],
+    mounted(){
+      if(this.nome != undefined){
+        this.colocar = this.nome
+      }
+      
+    },
+    props:['tamanho','periodo','nome'],
 };
 </script>
 
