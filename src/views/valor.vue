@@ -133,12 +133,15 @@ export default {
         calcularValor(extra, index, funcionario) {
         const status = funcionario.status[index];
         const funcao = funcionario.job;
+
+        if(this.he[funcao] != undefined){
             if (this.he[funcao][status] != undefined) {
                 return (
                 parseFloat(extra * this.he[funcao][status].extra) +
                 parseFloat(this.he[funcao][status].fixo)
                 ).toFixed(2);
             }
+        }
         return 0;
         },
         dinheiro(valor){

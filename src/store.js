@@ -8,7 +8,9 @@ export default new Vuex.Store({
         // urls:{
         //     escala: 'https://webrun.perbras.com.br/medicao/escalaAPI.rule?sys=MDC&mes={{periodo}}&estab={{estab}}&modo=periodo',
         //     cor: 'https://webrun.perbras.com.br/medicao/colorAPI.rule?sys=MDC&estab={{estab}}',
-        //     hora: 'https://webrun.perbras.com.br/medicao/horaExtraAPI.rule?sys=MDC&estab={{estab}}'
+        //     hora: 'https://webrun.perbras.com.br/medicao/horaExtraAPI.rule?sys=MDC&estab={{estab}}',
+        //     periodo: "https://webrun.perbras.com.br/medicao/periodoAPI.rule?sys=MDC&mes={{periodo}}&contrato={{estab}}"
+              
         // },
         urls:{
             escala: 'http://localhost:3003/escala',

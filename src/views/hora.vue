@@ -3,9 +3,9 @@
       <table class="tabela">
           <tbody v-for="(setor,index) in tabela" :key="setor.id">
             <tr class="setor">
-                <th :colspan="tamanho + 1">{{setores[index]}}</th>        
+                <th class="make-25">{{setores[index]}}</th>        
             </tr>  
-            <tr v-for="linha in criaSetor(setor)" :key="linha.id">
+            <tr v-for="linha in criaSetor(setor)" :key="linha.id" class="normal-rows">
                 <td v-for="valor in linha" :class="valor.class" :colpan="valor.colspan" :style="valor.style" :key="valor.id">
                     {{valor.valor}}
                 </td>
@@ -35,9 +35,12 @@ export default {
                 colpan: 1,
                 class:  'nome-data',
             }
-            const dataOBJ = mes.map(valor => {
+            const dataOBJ = mes.map((valor,index) => {
                 const dt = {...data}
                 dt.valor = valor
+                if(index == 0){
+                    dt.class += ' make-20'
+                }
                 return dt
             })
             const retorno = []
@@ -136,6 +139,7 @@ Vue.directive('remove',{
     border-style: solid;
     border-color:black;
     width: 100%;
+    table-layout: fixed;
     font-size: 0.9rem;
 }
 
@@ -154,7 +158,12 @@ Vue.directive('remove',{
     border-color:black;
 }
 
-
+.make-25{
+    width: 25% !important;
+    white-space: nowrap;
+    word-wrap: normal;
+    overflow: hidden;
+}
 
 
 </style>
