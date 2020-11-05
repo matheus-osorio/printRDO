@@ -1,12 +1,6 @@
 <template>
   <div id="app" v-if="calculado" :key="chave">
-    <button
-      type="button"
-      class="btn btn-outline-info btn-small"
-      id="slide-activator"
-    >
-      <i class="fas fa-angle-down"></i>
-    </button>
+    <div id="slide-activator"></div>
     <div id="menu">
       <div class="dropdown-wrapper">
         <div class="dropdown">
@@ -60,8 +54,11 @@
         <router-link  :to="{name:'extra', params:{tabela}}" class="area" :class="{current: $route.name == 'extra'}">
           <b>HORA EXTRA</b>
         </router-link >
+        <router-link :to="{name:'porPessoa', params:{tabela}}" class="area" :class="{current: $route.name == 'porPessoa'}">
+          <b>POR PESSOA</b>
+        </router-link>
         <router-link :to="{name:'valor', params:{tabela}}" class="area" :class="{current: $route.name == 'valor'}">
-          <b>VALOR</b>
+          <b>VALORES</b>
         </router-link>
       </div>
     </div>
@@ -96,7 +93,6 @@ export default {
   },
   methods: {
     filtra(tipo,index){
-      console.log('entrou nessa função')
       this.ativos[tipo] = index
       let func = this.total
       if(this.ativos.setor >= 0){
@@ -111,6 +107,7 @@ export default {
       this.tabela = Object.values(func)
       this.chave += 1
     },
+
     pegaCor(status) {
       if (this.cores[status] != undefined) {
         return {
@@ -119,6 +116,7 @@ export default {
       }
       return {};
     },
+
     criaObjEscala(escala){
       return escala.reduce((obj, funcionario) => {
         if (obj[funcionario.setor] == undefined) {
@@ -138,6 +136,7 @@ export default {
         return obj;
       }, {});
     },
+
     calcularValor(extra, index, funcionario) {
       const status = funcionario.status[index];
       const funcao = funcionario.job;
@@ -160,6 +159,7 @@ export default {
       }
       return total;
     },
+
     somaTodos() {
       const funcoes = Object.keys(this.tabela);
       const inicio = this.tabela[funcoes[0]][0].status.map(() => 0);
@@ -170,7 +170,7 @@ export default {
         });
         return soma;
       }, inicio);
-    },
+    }
   },
   async mounted() {
     const periodo = await fetch(this.$store.getters.link('periodo',this.$route.params)).then(response => response.json())
@@ -323,13 +323,13 @@ export default {
 }
 #slide-activator {
   position: absolute;
-  top: 10px;
+  top: 0px;
+  height: 50px;
+  width: 100%;
   padding: 3px 10px;
   border-width: 2px;
-  border-color: #e6ee9c;
-  color: #e6ee9c;
   border-radius: 50px;
-  left: 48%;
+  
   z-index: 10;
 }
 #slide-activator:hover ~ #menu {

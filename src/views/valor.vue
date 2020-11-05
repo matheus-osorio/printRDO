@@ -1,149 +1,29 @@
 <template>
-  <div id="status">
-      <table class="tabela-valores">
-          <tbody v-for="(setor,index) in tabela" :key="setor.id">
-            <tr class="setor">
-                <th :colspan="tamanho + 1">{{setores[index]}}</th>        
-            </tr>  
-            <tr v-for="(linha) in criaSetor(setor)" :key="linha.id">
-                <td v-for="valor in linha" :class="valor.class" :colpan="valor.colspan" :style="valor.style" :key="valor.id">
-                    {{valor.valor}}
-                </td>
-            </tr>
-            <tr>
-                <br>
-            </tr>
-            <nomseq :tamanho="tamanho" :periodo="periodo" nome="TOTAL"/>
-            <tr>
-                <td>TOTAL</td>
-                <td v-for="valor in calculaSomaTotal()" :key="valor.id">{{valor}}</td>
-            </tr>
-            <!-- <tr class="setor">
-                <th :colspan="tamanho + 1">{{setores[index]}}</th>        
-            </tr>  
-
-            <span v-for="funcao in Object.keys(setor)" :key="funcao.id" v-remove>
-            <tr>
-            <th class="funcao" :colspan="tamanho + 1" >{{funcao}} - {{setor[funcao][0].setor}}</th>
-            </tr> 
-           <nomseq :tamanho="tamanho" :periodo="periodo"/>
-            <tr  v-for="funcionario in setor[funcao]" :key="funcionario.id">
-                <td class="nome">{{funcionario.nome}}</td>
-                <td v-for="(extra,index) in funcionario.extra" :key="extra.id" v-money>{{calcularValor(extra,index,funcionario)}}</td>
-            </tr>
-            <tr>
-                <td>TOTAL</td>
-                <td v-for="total in criaTotal(setor[funcao])" :key="total.id" v-money>{{total}}</td>
-            </tr>
-            </span>            -->
+  <div id="valor">
+      <table class="tabela">
+          <tbody>
+              <tr>
+                  <td class="header">ÁREA</td>
+                  <td class="header" v-for="dia in montaDias()" :key="dia.id">{{dia}}</td>
+                  <td class="header" >TOTAL</td>
+              </tr>
+              <tr v-for="linha in montaObj()" :key="linha.id">
+                  <td v-for="dado in linha" :key="dado.id" class="dados">
+                     {{dado}}
+                  </td>
+              </tr>
+              <tr>
+                  <td class="total" v-for="valor in montaTotal()" :key="valor.id">{{valor}}</td>
+              </tr>
           </tbody>
       </table>
   </div>
 </template>
 
 <script>
-
-import Vue from 'vue'
-import nomseq from '../components/nomeESequencia'
-
 export default {
-    props:['tabela','tamanho','setores','he','periodo'],
-    components:{
-        nomseq
-    },
+    props:['tabela','tamanho','setores','periodo','he'],
     methods:{
-        criaSetor(setor){
-            const funcao = {
-                colspan: this.tamanho + 1,
-                class: 'funcao',
-                style: {}
-            }
-            const mes = this.criaMes()
-            mes.unshift('Nome')
-            const data = {
-                colpan: 1,
-                class:  'nome-data',
-            }
-            const dataOBJ = mes.map(valor => {
-                const dt = {...data}
-                dt.valor = valor
-                return dt
-            })
-            const retorno = []
-            Object.keys(setor).forEach(func => {
-                const f = {...funcao}
-                f.valor = func + ' - ' + setor[func][0].setor
-                retorno.push([f])
-                retorno.push(dataOBJ)
-                setor[func].forEach((funcionario,i) => {
-                    let valores = [
-                        {
-                            class:'nome',
-                            colspan: 1,
-                            valor: funcionario.nome
-                        }
-                    ]
-
-                    const st = funcionario.extra.map((extra,index) => {
-                        return {
-                            class:'',
-                            colspan: 1,
-                            valor: this.calcularValor(extra,index,setor[func][i])
-                        }
-                    })
-
-                    valores = valores.concat(st)
-                    retorno.push(valores)
-                })
-
-                    let total = [{
-                            class:'',
-                            colspan: 1,
-                            valor: 'TOTAL:'
-                    }]
-
-                    const t = this.criaTotal(setor[func]).map((val) => {
-                        return {
-                            class: '',
-                            colspan: 1,
-                            valor: val
-                        }
-                    })
-                    
-                    total = total.concat(t)
-                    retorno.push(total)
-            })
-            return retorno
-        },
-        criaMes(){
-        const periodo = this.periodo
-          let novo = 0
-          const mes = []
-          for(let i = 0;i<this.tamanho;i++){
-            if(i > periodo.range.totalDias){
-              novo = i - periodo.range.totalDias
-            }
-            else{
-              novo = i + periodo.range.inicio
-            }
-            mes.push(novo)
-          }
-          return mes
-      },
-        calcularValor(extra, index, funcionario) {
-        const status = funcionario.status[index];
-        const funcao = funcionario.job;
-
-        if(this.he[funcao] != undefined){
-            if (this.he[funcao][status] != undefined) {
-                return (
-                parseFloat(extra * this.he[funcao][status].extra) +
-                parseFloat(this.he[funcao][status].fixo)
-                ).toFixed(2);
-            }
-        }
-        return 0;
-        },
         dinheiro(valor){
             valor = parseFloat(valor).toFixed(2) + "";
             valor = valor.replace(".", ",");
@@ -157,107 +37,130 @@ export default {
             return valor;
          },
 
-        criaTotal(funcao,mascara=true) {
-        const total = funcao[0].status.map(() => 0);
-            for (let funcionario of funcao) {
-                for (let index in total) {
-                total[index] +=
-                    this.calcularValor(funcionario.extra[index], index, funcionario) * 1;
+        montaDias(){
+            const tam = parseInt(this.tamanho)
+            const inicio = parseInt(this.periodo.range.inicio)
+            const mes = parseInt(this.periodo.range.totalDias)
+            const arr = []
+            for(let i=0;i<tam;i++){
+                let valor = 0
+                if(i<=mes){
+                    valor = parseInt(inicio + i)
+                }
+                else{
+                    valor = parseInt(i - mes)
+                }
+
+                arr.push(valor)
+            }
+
+            return arr
+        },
+        montaObj(montar = true){      
+            const arrInicio = []
+            const respostaFinal = []
+
+            for(let i=0;i<this.tamanho;i++){arrInicio.push(0)}
+            for(let area of this.tabela){
+
+                for(let prof of Object.keys(area)){
+                    let soma = undefined
+                    soma = [...arrInicio]
+                    for(let func of area[prof]){
+                        for(let index in func.status){
+                            let status = func.status[index]
+                            let he = func.extra[index]
+                            
+                            let val = {fixo:0,extra:0}
+                            if(this.he[prof] != undefined){
+                                if(this.he[prof][status]){
+                                    val = this.he[prof][status]
+                                }
+                            }
+                            
+                            
+                            soma[index] += 1*parseFloat(val.fixo + val.extra * he)
+                        }
+                    }
+                    console.log(soma.length)
+                    soma.push(soma.reduce(((soma,atual) => soma + atual)))
+                    respostaFinal.push([prof + ' - ' + area[prof][0].setor].concat(soma))
+                    
                 }
             }
-            if(mascara){
-                return total.map(valor => this.dinheiro(valor));
-            }
-            return total
-        },
-        calculaSomaTotal(){
-            const tam = []
-            for(let i=0;i<this.tamanho;i++){
-                tam.push(0)
-            }
             
-            const total = this.tabela.reduce((soma,setor) => {
-                Object.keys(setor).forEach((chave) => {
-                    const val = this.criaTotal(setor[chave],false)                    
-                    soma = soma.map((valor,index) => valor + val[index])
+            if(montar){
+                return respostaFinal.map((linha,) => {
+                return linha.map((valor,i) => {
+                    if(i == 0){return valor}
+                    return this.dinheiro(valor)
                 })
-                return soma
-            },tam)   
+                })
+            }
+
+            return respostaFinal
+        },
+        montaTotal(){
+            const final = this.montaObj(false)
             
-            return total.map(val => this.dinheiro(val))
+            let total = final.reduce((arr1,arr2) => {
+                return arr1.map((val,i) => {
+                    return val + arr2[i]
+                })
+            },final[0].map(() => 0))
+            total = total.map(valor => this.dinheiro(valor))
+            total[0] = 'TOTAL'
+            return total
         }
     },
+
     mounted(){
-        
+        this.montaObj()
     }
 }
-
-Vue.directive('remove',{
-    inserted(el){
-        const sub = el.innerHTML
-        const parent = el.parentNode
-        parent.innerHTML = parent.innerHTML.replace(/<span[.\n]*<\/span>/,sub)
-        
-        
-        
-    }
-})
-
-
 </script>
 
 <style>
-#status{
-    height: 100%;
-    padding: 15px;
-}
-
-.setor{
-    background-color: #81c784;
-}
-
-.sticky{
-    position: sticky;
-    top: 0;
-}
-
-.funcao{
-    background-color: #006064;
-    color: white;
+#valor{
     width: 100%;
+    padding: 15px 5px ;
 }
 
-.nome{
-   background-color: #fff9c4 ; 
+.tabela{
+    font-size: inherit;
+    table-layout: fixed;
 }
 
-.status{
-    background-color: #00acc1;
+.tabela > tbody > tr > td{
+    font-size: 0.5rem;
 }
 
-.tabela-valores{
-    border-style: solid;
-    border-color:black;
-    width: 100%;
-    font-size: 0.6rem;
+.dados:first-child{
+    width: 20%;
+    background-color: #fff9c4;
+}
+.dados:not(:first-child){
+    background-color: lightgray;
+}
+.dados:last-child{
+    font-weight: bold;
+    width: 5%;
+    background-color: lightcoral;
+    font-size: 0.6rem !important;
 }
 
-.tabela > thead{
-    border-style: solid;
-    border-color:black;
+.header:first-child{
+    width: 14%;
 }
 
-.tabela > tbody > tr{
-    border-style: solid;
-    border-color:black;
+.header:last-child{
+    width: 5%;
+    font-size: 0.6rem !important;
 }
 
-.tabela > tbody > tr > th,td{
-    border-style: solid;
-    border-color:black;
+.total:last-child{
+    font-weight: bolder;
+    font-size: 0.7rem !important;
 }
-
-
-
 
 </style>

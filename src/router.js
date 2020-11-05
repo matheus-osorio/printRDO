@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import status from './views/status'
 import hora from './views/hora'
+import porPessoa from './views/porPessoa'
 import valor from './views/valor'
 
 const routes = [
@@ -14,6 +15,11 @@ const routes = [
         path: '/extra/:estab/:periodo',
         component: hora,
         name: 'extra',
+    },
+    {
+        path: '/porPessoa/:estab/:periodo',
+        component: porPessoa,
+        name: 'porPessoa',
     },
     {
         path: '/valor/:estab/:periodo',
