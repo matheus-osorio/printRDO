@@ -1,19 +1,19 @@
 <template>
-  <div id="tabela-valor">
-      <table class="tabela">
+  <div id="valor">
+      <table class="tabela-print">
           <tbody>
               <tr>
-                  <td class="header sticky">ÁREA</td>
-                  <td class="header" v-for="dia in montaDias()" :key="dia.id">{{dia}}</td>
-                  <td class="header" >TOTAL</td>
+                  <td class="header-print">ÁREA</td>
+                  <td class="header-print" v-for="dia in montaDias()" :key="dia.id">{{dia}}</td>
+                  <td class="header-print" >TOTAL</td>
               </tr>
               <tr v-for="linha in montaObj()" :key="linha.id">
-                  <td v-for="dado in linha" :key="dado.id" class="dados">
+                  <td v-for="dado in linha" :key="dado.id" class="dados-print">
                      {{dado}}
                   </td>
               </tr>
               <tr>
-                  <td class="total" v-for="valor in montaTotal()" :key="valor.id">{{valor}}</td>
+                  <td class="total-print" v-for="valor in montaTotal()" :key="valor.id">{{valor}}</td>
               </tr>
           </tbody>
       </table>
@@ -120,69 +120,47 @@ export default {
 }
 </script>
 
-<style scoped>
-
-</style>
-
-
 <style>
-
-
-#tabela-valor{
-    width: 200vw;
+#valor{
+    width: 100%;
     padding: 15px 5px ;
 }
 
-tr:nth-child(1) > td{
-    position: sticky;
-    background-color: white;
-    top:0
-}
-
-.sticky{
-    position: sticky;
-    background-color: white;
-    left: 0;
-}
-
-.tabela{
+.tabela-print{
     font-size: inherit;
     table-layout: fixed;
-    overflow: auto;
 }
 
-.tabela > tbody > tr > td{
-    font-size: 1rem;
+.tabela-print > tbody > tr > td{
+    font-size: 0.5rem;
 }
 
-.dados:first-child{
+.dados-print:first-child{
     width: 30%;
-    position: sticky;
-    left: 0;
     background-color: #fff9c4;
 }
-.dados:not(:first-child){
+.dados-print:not(:first-child){
     background-color: lightgray;
 }
-.dados:last-child{
+.dados-print:last-child{
     font-weight: bold;
-    width: 15%;
-    background-color: lightcoral;
-    font-size: 1rem !important;
-}
-
-.header:first-child{
-    width: 14%;
-}
-
-.header:last-child{
     width: 5%;
-    font-size: 1rem !important;
+    background-color: lightcoral;
+    font-size: 0.6rem !important;
 }
 
-.total:last-child{
+.header-print:first-child{
+    width: 30% !important;
+}
+
+.header-print:last-child{
+    width: 5%;
+    font-size: 0.6rem !important;
+}
+
+.total-print:last-child{
     font-weight: bolder;
-    font-size: 1.2rem !important;
+    font-size: 0.7rem !important;
 }
 
 </style>

@@ -61,6 +61,13 @@
           <b>VALORES</b>
         </router-link>
       </div>
+
+      <div class="vertical-line">
+      </div>
+      <div>
+        <button class="area" @click="modoImpressao">Modo Impressão</button>
+        <button class="area" @click="Imprimir">Imprimir</button>
+      </div>
     </div>
     <div>
       <router-view :periodo="periodo" :tabela="tabela" :tamanho="tamanho" :cores="cores" :setores="strFiltr" :he="he"/>
@@ -92,6 +99,19 @@ export default {
     };
   },
   methods: {
+    modoImpressao(){
+      const rota = this.$route.params
+      const nome = this.$route.name
+      const novaRota = `/#/${nome}/print/${rota.estab}/${rota.periodo}`
+
+      window.location.href = novaRota
+    },
+    Imprimir(){
+      const menu = document.querySelector('#menu')
+      menu.classList.add('noshow')
+      window.print()
+      menu.classList.remove('noshow')
+    },
     filtra(tipo,index){
       this.ativos[tipo] = index
       let func = this.total
@@ -228,6 +248,10 @@ export default {
   border-color: #eeeeee;
   color: #eeeeee;
 }
+
+.noshow{
+  display: none !important;
+}
 .dropdown-content {
   display: none;
   position: absolute;
@@ -304,7 +328,7 @@ export default {
   position: absolute;
   transition: 0.3s;
   display: grid;
-  grid-template-columns: 80px 80px 15px 5px 1fr;
+  grid-template-columns: 80px 80px 15px 5px 1fr 15px 1fr;
   padding: 5px;
   column-gap: 5px;
   row-gap: 5px;

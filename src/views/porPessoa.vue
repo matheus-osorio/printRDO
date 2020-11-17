@@ -1,6 +1,6 @@
 <template>
   <div id="status">
-      <table class="tabela-valores">
+      <table class="tabela-print">
           <tbody v-for="(setor,index) in tabela" :key="setor.id">
             <tr class="setor">
                 <th :colspan="tamanho + 1">{{setores[index]}}</th>        
@@ -209,6 +209,7 @@ Vue.directive('remove',{
 <style>
 #status{
     height: 100%;
+    width: 100%;
     padding: 15px;
 }
 

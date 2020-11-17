@@ -114,7 +114,8 @@ Vue.directive('remove',{
 })
 </script>
 
-<style>
+<style scoped>
+
 #status{
     height: 100%;
     padding: 15px;
